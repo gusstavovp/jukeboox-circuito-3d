@@ -1,0 +1,545 @@
+<!doctype html><html lang="pt-BR"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Jukeboox · Simulação RFID</title><style>:root{color-scheme:dark;--page:#0b1019;--panel:#111a28;--line:#2b3a50;--text:#f1f5fc;--muted:#a9b8cb;--accent:#68e5d2;font:16px Inter,system-ui,sans-serif}*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 24% -30%,#1c3b50 0,transparent 49%),var(--page);color:var(--text)}a{color:var(--accent)}button,input{font:inherit}button{cursor:pointer;color:var(--muted);background:transparent;border:1px solid transparent;border-radius:8px;padding:.48rem .72rem;min-height:36px}button:hover{color:var(--text);background:#223047}button:focus-visible,input:focus-visible,canvas:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}button[aria-pressed=true]{background:#25384d;color:var(--text);border-color:#3b536b}.top{height:62px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);padding:0 max(4vw,20px);background:#0b1320c9}.top a{font-size:.89rem;text-decoration:none}.brand{font-weight:800;letter-spacing:.17em;display:flex;align-items:center;gap:.7rem}.record{width:25px;height:25px;border:2px solid var(--accent);border-radius:50%;display:grid;place-items:center;box-shadow:inset 0 0 0 3px #0f2030,inset 0 0 0 4px #5ca8a5}.record::after{content:"";width:5px;height:5px;background:var(--accent);border-radius:50%}main{max-width:1600px;margin:auto;padding:clamp(20px,3.4vw,54px)}.intro{margin-bottom:23px}.intro h1{font-size:clamp(2rem,4vw,3.2rem);margin:0;letter-spacing:-.055em;line-height:1.12}.intro p{color:var(--muted);margin:8px 0 0}.workspace{display:grid;grid-template-columns:minmax(0,2.15fr) minmax(310px,1fr);gap:14px}.stage,.inspector{border:1px solid var(--line);border-radius:15px;background:var(--panel);min-width:0;overflow:hidden}.stagebar,.stagefoot,.inspector-head{display:flex;align-items:center;justify-content:space-between;padding:10px 13px;gap:9px}.segmented,.tabs,.filters{display:flex;gap:4px}.segmented{flex-wrap:wrap}.quiet{border-color:var(--line);font-size:.84rem;white-space:nowrap}.viewport{position:relative;height:clamp(370px,58vh,680px);background:#0d1727;border-block:1px solid var(--line);overflow:hidden}.viewport canvas{position:absolute;inset:0;width:100%;height:100%}#overlay{touch-action:none;cursor:grab}#overlay:active{cursor:grabbing}.tools{display:grid;gap:5px;position:absolute;right:12px;bottom:13px}.tools button{font-size:1.25rem;background:#17263b;border-color:#354960;min-width:38px;padding:0}.stagefoot{justify-content:flex-start;flex-wrap:wrap;font-size:.85rem;color:var(--muted);gap:15px}.stagefoot span{margin-left:auto}.stagefoot input{accent-color:var(--accent)}#view-state{position:absolute;left:13px;bottom:13px;font-size:.79rem;padding:.38rem .55rem;border:1px solid #344960;border-radius:6px;color:#c2d4e6;background:#111d30e8;pointer-events:none}.inspector{padding:13px;display:flex;flex-direction:column;min-height:0}.inspector-head{padding:0 0 10px}.inspector h2{font-size:1.13rem;margin:0}.tabs{border-bottom:1px solid var(--line);padding-bottom:8px}.tabs button{flex:1;text-align:left}.tabs span{color:var(--muted);font-size:.77rem;margin-left:.25rem}.filters{flex-wrap:wrap;margin:9px 0;min-height:33px}.filter{font-size:.78rem;border:1px solid var(--line);padding:.18rem .5rem;min-height:30px}.dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;flex:0 0 auto;background:var(--dot,#9ab2d0)}#search{width:100%;border:1px solid var(--line);background:#0e1725;border-radius:8px;color:var(--text);padding:.6rem .7rem;margin:0 0 8px}.results{height:clamp(205px,38vh,450px);overflow:auto;scrollbar-color:#46617f transparent}.row{display:block;text-align:left;width:100%;padding:.58rem .62rem;border-bottom:1px solid #23334a;border-radius:0}.row:hover,.row[aria-pressed=true]{border-radius:7px}.row strong{font-size:.91rem;color:var(--text);display:block}.row small{display:block;color:var(--muted);font-size:.78rem;margin:.21rem 0 0 .85rem;overflow-wrap:anywhere}.empty{font-size:.89rem;color:var(--muted);padding:.6rem}#selection{border:1px solid #3b6a76;border-radius:8px;padding:.58rem .64rem;margin:0 0 .5rem;background:#142637;font-size:.84rem}#selection strong{color:var(--accent)}#selection p{margin:.36rem 0;color:#d4deed}#selection button{border-color:#3b536b;font-size:.76rem;min-height:29px;margin:.14rem .12rem .1rem 0}.notes{display:grid;gap:8px;margin-top:16px}.notes details{background:var(--panel);border:1px solid var(--line);border-radius:9px;padding:.8rem 1rem;color:var(--muted)}.notes summary{cursor:pointer;color:var(--text);font-weight:600}.notes p,.notes ul{margin:.66rem 0 0;line-height:1.6}.visually-hidden{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}[hidden]{display:none!important}@media(max-width:850px){.workspace{grid-template-columns:1fr}.viewport{height:clamp(335px,55vh,530px)}.results{height:300px}.stagefoot span{margin-left:0}}@media(max-width:440px){main{padding:14px}.segmented button{font-size:.8rem;padding:.36rem .47rem}.stagebar .quiet{font-size:.73rem;padding:.4rem}.stagefoot{font-size:.74rem}}
+.workspace-tabs{margin-bottom:12px}.demo-panel{display:grid;gap:12px}.demo-head{display:flex;justify-content:space-between;align-items:center;gap:8px}.demo-head button{background:#a7f0dc;color:#123329;border-color:#87d8c5;font-weight:750;min-width:85px}.demo-head button[aria-pressed=true]{background:#382b38;color:#ffbdc1;border-color:#604253}.playback{border:1px solid #30475e;border-radius:9px;padding:12px;background:#0b1524;min-height:74px;display:grid;gap:5px}.playback span{font-size:.85rem;color:var(--accent)}.playback strong{font-size:1.05rem;line-height:1.25}.demo-actions,.disc-picker,.audio-tools{display:flex;gap:7px;flex-wrap:wrap;align-items:center}.demo-actions button,.disc-picker button,.audio-tools button{background:#213247;border-color:#3a526d;color:var(--text);min-height:37px;font-size:.86rem}.demo-actions button:hover,.disc-picker button:hover,.audio-tools button:hover{background:#2e4761}.demo-actions button:disabled,.disc-picker button:disabled,.audio-tools button:disabled{opacity:.46;cursor:default}.demo-panel label{color:#c4d1e3;font-size:.86rem}.disc-picker select{color:var(--text);background:#0e1725;border:1px solid var(--line);border-radius:8px;flex:1;min-width:150px;padding:.52rem .55rem;font-size:.86rem}.audio-tools input{accent-color:var(--accent);width:80px;flex:1;min-width:55px}.demo-help{font-size:.83rem;line-height:1.5;margin:0;color:var(--muted)}#open-box[aria-pressed=true]{border-color:#78b4c9}
+.power-status{border:1px solid #3c677b;background:#142839;border-radius:8px;padding:.58rem .72rem;color:#c9e9ed;font-size:.83rem}
+.top nav { display:flex; align-items:center; gap:.55rem 1rem; flex-wrap:wrap; justify-content:flex-end; }
+.top nav a:last-child, #thinkercad-tab[aria-expanded="true"] { color:#8bf6d6; border-color:#68c7aa; }
+.tc { scroll-margin-top:1rem; margin:1.6rem 0; border:1px solid #32425a; border-radius:16px; background:#111c2e; overflow:hidden; color:#f0f5ff; }
+.tc[hidden] { display:none; }
+.tc-head, .tc-filters { display:flex; justify-content:space-between; align-items:center; gap:1rem; flex-wrap:wrap; }
+.tc-head { padding:1.1rem 1.35rem; border-bottom:1px solid #344158; }
+.tc-head h2,.tc-controls h3,.tc-head p { margin:0; }
+.tc-head h2 { font-size:1.65rem; }
+.tc-head p,.tc-controls p { color:#b7c6de; }
+.tc-head button { background:#98f2cd; color:#112c26; font-weight:750; border-color:transparent; }
+.tc-head button[aria-pressed="true"] { color:#fff2e8; background:#713c2b; }
+.tc-layout { display:grid; grid-template-columns:minmax(0,1fr) minmax(230px,262px); }
+.tc-diagram { min-width:0; }
+.tc-filters { justify-content:flex-start; padding:.65rem 1rem; font-weight:650; }
+.tc select { color:#eff6ff; background:#19283f; border:1px solid #516581; border-radius:7px; padding:.5rem; }
+.tc-scroll { overflow:auto; background:#e4eaf3; }
+.tc-scroll:focus-visible { outline:3px solid #52acff; outline-offset:-3px; }
+#tc-board { display:block; width:100%; min-width:755px; font-family:system-ui,sans-serif; }
+#tc-board text { user-select:none; }
+.tc-wire { cursor:pointer; }
+.tc-wire .tc-wire-hit { stroke:transparent; stroke-width:15; }
+.tc-wire .tc-wire-line { stroke-width:4.5; }
+.tc-wire:hover .tc-wire-line,.tc-wire:focus-visible .tc-wire-line,.tc-wire[data-active] .tc-wire-line { stroke-width:7; }
+.tc-wire:focus-visible { outline:none; }
+.tc-wire[data-dim] { opacity:.13; }
+.tc-wire[hidden] { display:none; }
+#tc-drop .tc-target { stroke:#2f527a; stroke-width:2; fill:#cbd8eb; stroke-dasharray:6 5; }
+#tc-drop[data-hover] .tc-target, #tc-drop[data-tag] .tc-target { stroke:#14705b; fill:#bce8d7; }
+.tc-diagram > p { margin:0; padding:.75rem 1rem; min-height:3rem; }
+.tc-controls { padding:1rem; border-left:1px solid #344158; }
+.tc-controls h3 { font-size:1rem; }
+.tc-controls p { font-size:.93rem; margin:.5rem 0 .8rem; }
+#tc-status { padding:.55rem .65rem; margin:0 0 1rem; border-radius:7px; background:#22324a; color:#e9f2ff; }
+#tc-tags { display:grid; gap:.45rem; margin-bottom:.5rem; }
+.tc-tag { display:grid; grid-template-columns:13px 1fr auto; gap:.5rem; align-items:center; text-align:left; touch-action:none; }
+.tc-tag i { width:12px; aspect-ratio:1; border-radius:50%; background:var(--tag); }
+.tc-tag small { color:#bed1e9; white-space:nowrap; }
+.tc-tag[aria-pressed="true"] { border-color:var(--tag); background:#23374c; }
+.tc-tag:not(:disabled) { cursor:grab; }
+.tc-tag:active:not(:disabled) { cursor:grabbing; }
+.tc-controls button:disabled { opacity:.55; cursor:default; }
+.tc-player { display:grid; gap:.45rem; border-top:1px solid #344158; margin-top:.9rem; padding-top:.85rem; }
+.tc-player p { margin:0 0 .3rem; }
+.tc-player label { display:flex; justify-content:space-between; margin-top:.4rem; }
+.tc-player input { width:100%; accent-color:#8bf6d6; }
+.tc-ghost { position:fixed; z-index:10; pointer-events:none; transform:translate(-50%,-50%); border:2px solid var(--tag); border-radius:8px; padding:.45rem .85rem; background:#17263b; color:white; font-weight:700; }
+@media(max-width:850px) {
+  .tc-layout { grid-template-columns:1fr; }
+  .tc-controls { border-left:0; border-top:1px solid #344158; }
+}
+
+body:has(#thinkercad:not([hidden])) { background:#f1f2f4; color:#202b34; }
+body:has(#thinkercad:not([hidden])) .top { height:49px; padding-inline:clamp(12px,2.5vw,36px); background:#fff; border-color:#d6dce1; }
+body:has(#thinkercad:not([hidden])) .top a { color:#225b84; }
+body:has(#thinkercad:not([hidden])) .record { border-color:#187eb6; box-shadow:none; }
+body:has(#thinkercad:not([hidden])) .record::after { background:#187eb6; }
+body:has(#thinkercad:not([hidden])) main { max-width:none; padding:0; }
+body:has(#thinkercad:not([hidden])) :is(.intro,.workspace,.notes) { display:none; }
+.tc { color-scheme:light; scroll-margin-top:49px; margin:0; border:0; border-radius:0; color:#202b34; background:#fff; }
+.tc-head { min-height:68px; padding:.65rem clamp(12px,2.5vw,36px); border-color:#d6dce1; }
+.tc-head h2 { font-size:1.25rem; }
+.tc-head p,.tc-controls p,.tc-tag small { color:#4f5e6d; }
+.tc-head p { font-size:.875rem; }
+.tc button { background:#fff; color:#203547; border-color:#aebbc6; border-radius:5px; }
+.tc button:hover { background:#edf5fc; color:#162b3b; }
+.tc button:focus-visible,.tc input:focus-visible { outline-color:#126da7; }
+.tc-head button,.tc-head button:hover { background:#146eaa; color:white; border-color:#146eaa; }
+.tc-head button[aria-pressed="true"] { background:#922f3d; border-color:#922f3d; color:#fff; }
+.tc-layout { grid-template-columns:minmax(0,1fr) minmax(240px,275px); }
+.tc-filters { min-height:52px; padding:.45rem 1rem; border-bottom:1px solid #d6dce1; font-size:.9rem; }
+.tc select { color:#243949; background:#fff; border-color:#aebbc6; border-radius:5px; }
+.tc-scroll { background:#eef0f2; }
+#tc-board { width:100%; min-width:820px; max-width:1500px; margin:auto; }
+.tc-wire .tc-wire-line { stroke-width:2.7; }
+.tc-wire:hover .tc-wire-line,.tc-wire:focus-visible .tc-wire-line,.tc-wire[data-active] .tc-wire-line { stroke-width:5; }
+#tc-drop .tc-target { fill:#f8fafc; stroke:#62839b; stroke-width:1.5; }
+#tc-drop[data-hover] .tc-target,#tc-drop[data-tag] .tc-target { fill:#d9f4ee; stroke:#18785f; }
+.tc-diagram > p { border-top:1px solid #d6dce1; color:#4f5e6d; font-size:.88rem; }
+.tc-controls,.tc-player { border-color:#d6dce1; }
+#tc-status { background:#eaf4fb; color:#174c70; font-size:.9rem; }
+.tc-tag[aria-pressed="true"] { color:#203547; background:#edf6fc; border-color:#367aa7; }
+.tc-player input { accent-color:#146eaa; }
+.tc-ghost { background:#fff; color:#203547; box-shadow:0 4px 16px #12223428; }
+@media(max-width:850px) { .tc-layout { grid-template-columns:1fr; } }
+
+body:has(#thinkercad:not([hidden])) { background:#ededeb; }
+.tc { --bench-border:#d8dedc; --bench-ink:#20332e; --bench-accent:#236352; color:var(--bench-ink); background:#f8faf9; }
+.tc-head { min-height:64px; background:#fff; border-color:var(--bench-border); }
+.tc-head h2 { font-size:1.2rem; letter-spacing:-.025em; }
+.tc-head button,.tc-head button:hover { background:var(--bench-accent); border-color:var(--bench-accent); padding-inline:1rem; }
+.tc-layout { gap:16px; padding:16px clamp(12px,2vw,28px) 24px; }
+.tc-diagram,.tc-controls { background:#fff; border:1px solid var(--bench-border); border-radius:10px; overflow:hidden; }
+.tc-filters { padding:.55rem .8rem; border-color:var(--bench-border); }
+.tc-scroll { background:#eeefeb; }
+#tc-board { min-width:760px; }
+.tc-controls { align-self:start; padding:.85rem; }
+#tc-status { background:#edf4f0; color:#27584a; border-radius:5px; }
+.tc-tag { gap:.55rem; min-height:48px; border-color:var(--bench-border); }
+.tc-tag i { width:15px; border-radius:3px; box-shadow:inset 0 0 0 1px #0003; }
+.tc-player { margin-top:1rem; border-color:var(--bench-border); }
+#tc-track { font-size:1.1rem; }
+.tc-player input { accent-color:var(--bench-accent); }
+@media(max-width:850px) { .tc-layout { gap:10px; } }
+body .top a:last-child{margin-left:1rem}</style><body><header class="top"><div class="brand"><span class="record" aria-hidden="true"></span>JUKEBOOX</div><nav aria-label="Seções"><a href="./">Circuito 3D</a><a href="prototipo.html">Controle e tutorial</a></nav></header><main><section id="thinkercad" class="tc" aria-labelledby="tc-title">
+  <header class="tc-head">
+    <div><h2 id="tc-title" tabindex="-1">Thinkercad</h2><p>Bancada virtual da Jukeboox RFID</p></div>
+    <button type="button" id="tc-power" aria-pressed="false">Iniciar simulação</button>
+  </header>
+  <div class="tc-layout">
+    <div class="tc-diagram">
+      <div class="tc-filters" aria-label="Filtrar fios">
+        <label for="tc-filter">Fiação</label>
+        <select id="tc-filter"><option value="all">Todos os fios</option><option value="energia">Alimentação</option><option value="rfid">RFID / SPI</option><option value="mp3">Controle MP3</option><option value="audio">Áudio estéreo</option></select>
+      </div>
+      <div class="tc-scroll" tabindex="0" aria-label="Diagrama de ligações. Role para ver a bancada inteira.">
+        <svg id="tc-board" viewBox="0 0 1100 590" role="group" aria-label="Componentes da bancada e 28 fios da Jukeboox"></svg>
+      </div>
+      <p id="tc-wire-detail" aria-live="polite">Selecione um fio para ver quais pinos ele liga.</p>
+    </div>
+    <aside class="tc-controls" aria-label="Controles da simulação">
+      <p id="tc-status" role="status">Simulação desligada</p>
+      <h3>Tags RFID</h3>
+      <p>Inicie a simulação e toque numa tag ou arraste-a até a antena do RC522.</p>
+      <div id="tc-tags"></div>
+      <button type="button" id="tc-remove" disabled>Retirar tag</button>
+      <div class="tc-player">
+        <h3>Tocando agora</h3><strong id="tc-track" aria-live="polite">Nenhuma faixa</strong>
+        <p id="tc-track-info">As músicas desta bancada são exemplos.</p>
+        <button type="button" id="tc-next" disabled>Próxima faixa</button>
+        <label for="tc-volume">Volume <output id="tc-volume-value" for="tc-volume">45%</output></label>
+        <input id="tc-volume" type="range" min="0" max="100" value="45">
+      </div>
+    </aside>
+  </div>
+</section></main><script>const parts = {};
+function part(id,name,kind,color,bench,inside,size,left=[],right=[],description=""){
+  parts[id]={id,name,kind,color,bench,inside,size,left,right,description};
+}
+part("esp","ESP32 DOIT","pcb","#164a55",[-82,2], [0,45,5],[45,31,2],["5V/VIN","GND","3V3"],["GPIO5","GPIO18","GPIO19","GPIO21","GPIO22","GPIO23","GPIO32"],"A placa fica solta no gabinete. Os terminais abaixo são identificados pelo nome elétrico.");
+part("rfid","Leitor RC522","pcb","#2558a6",[-83,63],[0,34,75],[59,39,2],["3V3","GND","RST","IRQ"],["MISO","MOSI","SCK","SDA/SS"],"O leitor fica sob o disco. SDA neste módulo é a seleção do barramento SPI.");
+part("mp3","DFPlayer Mini","pcb","#1d604d",[0,60],[30,-45,17],[22,22,2],["VCC","GND","RX","TX"],["DAC_L","DAC_R","SPK1","SPK2","BUSY"],"O microSD entra no soquete. Use DAC_L e DAC_R para o amplificador externo.");
+part("amp","PAM8406 HW-301","pcb","#27573a",[65,60],[-59,49,7],[26,25,2],["5V","GND","LIN","RIN","GND ÁUDIO"],["LOUT+","LOUT−","ROUT+","ROUT−"],"A disposição dos bornes é ilustrativa. Siga a serigrafia da sua HW-301. As saídas dos falantes são pares separados.");
+part("left","Falante esquerdo","speaker","#3c4559",[118,73],[-68,-35,25],[34,34,7],["+","−"],[],"Repete o canal esquerdo do amplificador.");
+part("right","Falante direito","speaker","#3c4559",[118,20],[68,-35,25],[34,34,7],["+","−"],[],"Repete o canal direito do amplificador.");
+part("source","Fonte de tomada 5 V CC","source","#3f475b",[-119,-86],[94,103,8],[23,15,8],[],["+","−"],"A fonte encaixa direto na tomada. Apenas o cabo de 5 V CC vai da fonte ao jack P4.");
+part("jack","Jack P4","jack","#253048",[-83,-86],[50,58,6],[19,12,7],["CENTRO","MANGA"],["+","−"],"Na traseira, alinhado ao centro do recorte de 12 × 14 mm, a 11 mm da base. Confirme a polaridade e a medida do conector real.");
+part("rails","Protoboard e trilhos","rail","#8798ab",[-9,-78],[0,-42,7],[75,26,5],["5V A","GND A"],["5V B","GND B"],"Os jumpers unem os segmentos de 5 V e os segmentos de GND. O RC522 recebe 3,3 V diretamente do ESP32.");
+part("card","Cartão microSD","card","#29384f",[25,83],[30,-45,21],[9,10,1],[],[],"Encaixa diretamente no DFPlayer.");
+part("tag","Tag RFID","tag","#ebc484",[-82,98],[0,30,85.8],[24,24,1],[],[],"Encaixa no compartimento inferior do disco e comunica por aproximação.");
+const wires=[];
+function link(group,name,a,b,info=""){wires.push({id:wires.length+1,group,name,a:a.split("."),b:b.split("."),info});}
+const p=(...a)=>link("energia",...a);
+p("Positivo da fonte","source.+","jack.CENTRO","Confirme a polaridade no conector real.");
+p("Retorno da fonte","source.−","jack.MANGA");
+p("Entrada +5 V","jack.+","rails.5V A");
+p("Terra comum","jack.−","rails.GND A");
+p("Jumper +5 V","rails.5V A","rails.5V B");
+p("Jumper GND","rails.GND A","rails.GND B");
+p("ESP32 · entrada 5 V","rails.5V A","esp.5V/VIN","Use somente a entrada 5V/VIN confirmada na sua placa DOIT.");
+p("ESP32 · retorno","rails.GND A","esp.GND");
+p("DFPlayer · 5 V","rails.5V B","mp3.VCC");
+p("DFPlayer · terra","rails.GND B","mp3.GND");
+p("Amplificador · 5 V","rails.5V B","amp.5V");
+p("Amplificador · terra","rails.GND B","amp.GND");
+p("RC522 · 3,3 V","esp.3V3","rfid.3V3","Ligação direta entre o ESP32 e o leitor.");
+p("RC522 · terra","rails.GND B","rfid.GND");
+for(const [gpio,pin] of [[5,"SDA/SS"],[18,"SCK"],[23,"MOSI"],[22,"RST"]]){
+  link("rfid",pin,"esp.GPIO"+gpio,"rfid."+pin,"Barramento SPI. IRQ fica livre.");
+}
+link("rfid","MISO","rfid.MISO","esp.GPIO19","Dados do leitor para o ESP32.");
+link("mp3","ESP32 TX para DFPlayer RX","esp.GPIO21","mp3.RX");
+link("mp3","TX DFPlayer","mp3.TX","esp.GPIO32","Confirme que o nível do TX do seu módulo é compatível com 3,3 V.");
+link("audio","Linha esquerda","mp3.DAC_L","amp.LIN","Use a entrada de linha marcada LIN no módulo.");
+link("audio","Linha direita","mp3.DAC_R","amp.RIN");
+p("Amplificador · terra de entrada","rails.GND B","amp.GND ÁUDIO");
+for(const [pin,id,end] of [["LOUT+","left","+"],["LOUT−","left","−"],["ROUT+","right","+"],["ROUT−","right","−"]]){
+  link("audio","Saída "+pin,"amp."+pin,id+"."+end,"Par BTL, sem ligação do borne negativo ao GND.");
+}
+const groups={energia:{label:"Alimentação",color:"#ff7174"},rfid:{label:"RFID / SPI",color:"#62d8e8"},mp3:{label:"Controle MP3",color:"#c393ff"},audio:{label:"Áudio estéreo",color:"#ffbb68"}};
+const unused=[
+  ["rfid","IRQ","O firmware consulta o leitor por SPI."],
+  ["mp3","BUSY","O firmware recebe o fim da faixa pela UART."],
+  ["mp3","SPK1 / SPK2","A HW-301 recebe áudio por DAC_L e DAC_R."],
+  ["mp3","IO1 / IO2 / ADKEY1 / ADKEY2 / USB±","O firmware controla o DFPlayer via UART."],
+  ["tag","Sem fios","Tag passiva dentro do disco."],
+  ["card","Sem fios","Cartão conectado pelo soquete do DFPlayer."],
+];
+const wireColor=w=>w.group==="energia"?(w.name.match(/terra|retorno|GND/i)?"#afbed0":w.name.match(/3,3|RC522 · 3/i)?"#ffcb70":"#ff7174"):groups[w.group].color;
+if(typeof module!=="undefined")module.exports={parts,wires,groups,unused,wireColor};
+const discs=[
+    {name:"Noite",rgb:[.22,.51,.85],tracks:[{name:"Luzes da noite",tempo:112,notes:[57,60,64,67,69,67,64,62]},{name:"Último refrão",tempo:100,notes:[60,64,67,72,69,67,64,62]}]},
+    {name:"Pulsos",rgb:[.93,.42,.23],tracks:[{name:"Pulsos de vinil",tempo:124,notes:[48,55,60,55,51,58,63,58]}]},
+    {name:"Horizonte",rgb:[.25,.75,.50],tracks:[{name:"Horizonte aberto",tempo:88,notes:[62,66,69,74,71,69,66,64]},{name:"Fim de tarde",tempo:96,notes:[55,59,62,67,65,62,59,57]}]},
+  ];window.jukeboxDemo={discs};</script><script>"use strict";
+(() => {
+  const panel = document.getElementById("thinkercad");
+  const get = id => document.getElementById(id);
+  const board = get("tc-board");
+  const detail = get("tc-wire-detail");
+  const namespace = "http://www.w3.org/2000/svg";
+  const layouts = {
+    source: {box:[30,447,113,100], title:"Fonte de tomada", pins:{"+":[143,480,"r"],"-":[143,510,"r"]}},
+    jack: {box:[193,464,92,65], title:"Jack P4", pins:{CENTRO:[193,480,"l"],MANGA:[193,510,"l"],"+":[285,480,"r"],"-":[285,510,"r"]}},
+    rails: {box:[350,459,490,100], title:"Protoboard", pins:{"5V A":[367,480],"GND A":[367,535],"5V B":[610,480],"GND B":[610,535]}},
+    rfid: {box:[70,166,205,217], title:"RC522", pins:{"SDA/SS":[275,210,"r"],SCK:[275,235,"r"],MOSI:[275,260,"r"],MISO:[275,285,"r"],RST:[275,310,"r"],"3V3":[275,335,"r"],GND:[255,383,"b"]}},
+    esp: {box:[418,166,141,217], title:"ESP32 DOIT", pins:{GPIO5:[418,210,"l"],GPIO18:[418,235,"l"],GPIO23:[418,260,"l"],GPIO19:[418,285,"l"],GPIO22:[418,310,"l"],"3V3":[418,335,"l"],GPIO21:[559,225,"r"],GPIO32:[559,258,"r"],"5V/VIN":[444,383,"b"],GND:[524,383,"b"]}},
+    mp3: {box:[656,174,126,209], title:"DFPlayer Mini", pins:{RX:[656,225,"l"],TX:[656,258,"l"],DAC_L:[782,239,"r"],DAC_R:[782,268,"r"],VCC:[680,383,"b"],GND:[752,383,"b"]}},
+    amp: {box:[866,174,116,209], title:"PAM8406", pins:{LIN:[866,239,"l"],RIN:[866,268,"l"],"5V":[882,383,"b"],GND:[923,383,"b"],"GND ÁUDIO":[866,332,"l"],"LOUT+":[982,219,"r"],"LOUT-":[982,236,"r"],"ROUT+":[982,292,"r"],"ROUT-":[982,309,"r"]}},
+    left: {box:[1021,188,61,65], title:"Esq. (L)", pins:{"+":[1021,219,"l"],"-":[1021,236,"l"]}},
+    right: {box:[1021,271,61,65], title:"Dir. (R)", pins:{"+":[1021,292,"l"],"-":[1021,309,"l"]}}
+  };
+  // Intermediate bends from the circuit's first endpoint to its second.
+  const bends = {
+    4:[[310,510],[310,535]],
+    5:[], 6:[],
+    7:[[444,480]], 8:[[524,535]],
+    9:[[680,480]], 10:[[752,535]],
+    11:[[882,480]], 12:[[923,535]],
+    14:[[625,535],[625,440],[255,440]],
+    24:[[640,535],[640,421],[828,421],[828,332]]
+  };
+  const pinName = pin => pin.replaceAll("−", "-");
+  const point = ([id, pin]) => layouts[id].pins[pinName(pin)];
+  const description = wire => [wire.a, wire.b].map(([id,pin]) => parts[id].name + " · " + pin).join(" ↔ ");
+  const tagColors = ["#58a4ff","#ff9865","#66dca0"];
+  const tagUids = ["04 A1 01 10","04 A1 02 20","04 A1 03 30"];
+  const songs = window.jukeboxDemo.discs;
+  let powered = false, activeTag = null, disc = null, track = 0, selectedWire = null;
+  let audio, gain, timer, playingVoices = new Set(), notesPlayed = 0, drag, ignoreClickUntil = 0;
+
+  function shape(parent, name, attributes, label) {
+    const element = document.createElementNS(namespace,name);
+    for(const [key,value] of Object.entries(attributes)) element.setAttribute(key,value);
+    if(label !== undefined) element.textContent = label;
+    parent.append(element);
+    return element;
+  }
+  function rect(parent,x,y,width,height,fill,extra={}) {
+    return shape(parent,"rect",{x,y,width,height,fill,rx:6,...extra});
+  }
+  function circle(parent,cx,cy,r,fill,extra={}) {
+    return shape(parent,"circle",{cx,cy,r,fill,...extra});
+  }
+  function label(parent,x,y,value,extra={}) {
+    return shape(parent,"text",{x,y,fill:"#142c47","font-size":13,"font-weight":650,...extra},value);
+  }
+  function line(parent,points,extra={}) {
+    return shape(parent,"polyline",{points:points.map(([x,y])=>x+","+y).join(" "),fill:"none","stroke-linejoin":"round","stroke-linecap":"round",...extra});
+  }
+  function boardArt(id, group, x, y, w, h) {
+    if(id === "rails") {
+      rect(group,x,y,w,h,"#f7f8fb",{stroke:"#9eafc3"});
+      for(let col=0;col<48;col++) {
+        for(const row of [21,34,42,59,67,76]) circle(group,x+17+col*9.7,y+row,2,"#9ba9ba");
+      }
+      rect(group,x+10,y+20,w-20,2,"#b94246");
+      rect(group,x+10,y+74,w-20,2,"#365da1");
+      rect(group,x+12,y+48,w-24,4,"#a4b0bf");
+      label(group,x+9,y+94,"+5 V / GND · jumpers entre os trilhos A e B",{"font-size":12});
+      return;
+    }
+    const finishes = {esp:"#173b50",rfid:"#14618c",mp3:"#154a6e",amp:"#176b75",source:"#343a41",jack:"#313b44",left:"#373f48",right:"#373f48"};
+    rect(group,x+2,y+4,w,h,"#192f47",{opacity:.16});
+    rect(group,x,y,w,h,finishes[id],{stroke:"#243641",rx:3});
+    rect(group,x+4,y+4,w-8,h-8,"none",{stroke:"#ffffff","stroke-opacity":.25,rx:2});
+    for(const [cx,cy] of [[x+9,y+9],[x+w-9,y+9],[x+9,y+h-9],[x+w-9,y+h-9]]) circle(group,cx,cy,3.5,"#aebac7");
+    const silver = "#a7b1bb", chip = "#15222d";
+    const integratedCircuit = (px,py,width,height) => {
+      rect(group,px,py,width,height,"#141a1d",{rx:2,stroke:"#444c4e"});
+      for(let row=4;row<height-2;row+=4) {
+        rect(group,px-4,py+row,4,1.6,"#c3c9c9",{rx:.3});
+        rect(group,px+width,py+row,4,1.6,"#c3c9c9",{rx:.3});
+      }
+      circle(group,px+4,py+4,1.4,"#b5bdbd");
+    };
+    if (["esp","rfid","mp3","amp"].includes(id)) {
+      for (const [col,count] of [[14,7],[w-24,6]]) {
+        for (let row=0;row<count;row++) {
+          rect(group,x+col,y+29+row*20,8,3,row%3===0?"#d1aa62":"#b2b8ab",{rx:.5});
+          rect(group,x+col+2,y+29+row*20,4,3,row%3===0?"#6f5829":"#253237",{rx:.3});
+        }
+      }
+    }
+    switch(id) {
+      case "rfid":
+        for(let s=0;s<6;s++) rect(group,x+19+s*4,y+43+s*4,118-8*s,143-8*s,"none",{rx:14,stroke:"#efd48d","stroke-width":1.5});
+        integratedCircuit(x+148,y+108,25,28);
+        label(group,x+76,y+120,"13.56 MHz",{"text-anchor":"middle",fill:"#ffeccc","font-size":11});
+        rect(group,x+151,y+87,18,8,"url(#tc-metal)",{rx:2});
+        break;
+      case "esp":
+        rect(group,x+36,y+21,70,54,chip);
+        line(group,[[x+46,y+63],[x+46,y+32],[x+57,y+32],[x+57,y+55],[x+69,y+55],[x+69,y+32],[x+82,y+32],[x+82,y+55],[x+94,y+55],[x+94,y+34]],{stroke:"#dab56a","stroke-width":2});
+        rect(group,x+40,y+77,65,71,"url(#tc-metal)",{rx:3,stroke:"#e1e5e5"});
+        for(let col=0;col<9;col++) rect(group,x+43+col*7,y+148,3,5,"#c9ae68",{rx:0});
+        integratedCircuit(x+65,y+160,16,16);
+        label(group,x+72,y+123,"WROOM",{"text-anchor":"middle","font-size":10});
+        rect(group,x+55,y+h-20,33,23,"url(#tc-metal)",{rx:3,stroke:"#68777f"});
+        rect(group,x+59,y+h-4,25,5,"#20262b",{rx:1});
+        break;
+      case "mp3":
+        rect(group,x+24,y+105,78,69,"url(#tc-metal)",{rx:2,stroke:"#dce2df"});
+        for(let i=0;i<7;i++) rect(group,x+31+i*9,y+111,4,16,"#66737b",{rx:1});
+        rect(group,x+31,y+137,64,45,chip);
+        label(group,x+63,y+156,"microSD",{"text-anchor":"middle",fill:"#fff","font-size":11});
+        integratedCircuit(x+47,y+47,33,29);
+        break;
+      case "amp":
+        integratedCircuit(x+45,y+78,36,47);
+        label(group,x+63,y+104,"8406",{"text-anchor":"middle",fill:"#bbc7c6","font-size":9});
+        rect(group,x+29,y+147,66,25,"#27714c",{rx:2,stroke:"#73ac8a"});
+        for(let i=0;i<4;i++) {
+          circle(group,x+38+i*16,y+158,5,"url(#tc-metal)");
+          line(group,[[x+35+i*16,y+160],[x+41+i*16,y+156]],{stroke:"#4e5e5c"});
+        }
+        break;
+      case "source":
+        rect(group,x+24,y+23,61,55,"#252d3f");
+        for(const offset of [40,65]) rect(group,x+offset,y+8,7,22,silver);
+        label(group,x+54,y+57,"5 V CC",{"text-anchor":"middle",fill:"#fff"});
+        break;
+      case "jack":
+        rect(group,x+21,y+11,51,44,"#1d2536");
+        circle(group,x+47,y+33,15,silver);
+        circle(group,x+47,y+33,10,chip);
+        circle(group,x+47,y+33,3,silver);
+        break;
+      default:
+        for(const [radius,fill] of [[25,"#a9b4c1"],[20,"#202d3a"],[14,"#485965"],[7,"#1e2a38"]]) circle(group,x+w/2,y+h/2,radius,fill);
+    }
+  }
+  const wireNodes = new Map();
+  function buildBoard() {
+    const defs = shape(board,"defs",{});
+    const metal = shape(defs,"linearGradient",{id:"tc-metal",x2:"100%",y2:"100%"});
+    for(const [offset,color] of [["0%","#e9eeed"],["54%","#a7b3b5"],["100%","#687981"]]) {
+      shape(metal,"stop",{offset,"stop-color":color});
+    }
+    const grid = shape(defs,"pattern",{id:"tc-grid",width:24,height:24,patternUnits:"userSpaceOnUse"});
+    circle(grid,2,2,.6,"#c3c9c2");
+    rect(board,0,0,1100,590,"#eeefeb",{rx:0});
+    rect(board,0,0,1100,590,"url(#tc-grid)",{rx:0});
+    const target = shape(board,"g",{id:"tc-drop"});
+    rect(target,91,58,146,77,"#cbd8eb",{class:"tc-target",rx:12});
+    label(target,164,88,"Aproxime a tag",{"text-anchor":"middle",id:"tc-drop-title"});
+    label(target,164,110,"Antena do RC522",{"text-anchor":"middle","font-size":12,id:"tc-drop-state"});
+    line(board,[[164,135],[164,152]],{stroke:"#496481","stroke-width":2,"stroke-dasharray":"3 4"});
+    for(const [id,{box,title,pins}] of Object.entries(layouts)) {
+      const g=shape(board,"g",{"aria-hidden":"true","data-component":id});
+      const [x,y,w,h]=box;
+      label(g,x+w/2,y-9,title,{"text-anchor":"middle","font-size":15,"font-weight":750});
+      boardArt(id,g,x,y,w,h);
+      for(const [pin,[px,py,side]] of Object.entries(pins)) {
+        circle(g,px,py,3.8,"#303c45",{stroke:"#deb977","stroke-width":1.6});
+        if(!side||["left","right","jack","source"].includes(id)) continue;
+        const offsets={l:[9,4,"start"],r:[-9,4,"end"],b:[0,-9,"middle"]};
+        const [dx,dy,anchor]=offsets[side];
+        label(g,px+dx,py+dy,pin,{"text-anchor":anchor,fill:"#f3f7fc","font-size":pin==="GND ÁUDIO"?9:10});
+      }
+    }
+    const colors = {rfid:["#177ca1","#338353","#896724","#99478e","#287f80"],mp3:["#964594","#5248a0"],audio:["#ae6321","#9a5436","#ae6321","#46515a","#9a5436","#46515a"]};
+    const wireGroupIndex = {};
+    for(const wire of wires) {
+      const group=shape(board,"g",{class:"tc-wire",role:"button",tabindex:0,"aria-label":description(wire),"aria-pressed":"false"});
+      const index = wireGroupIndex[wire.group] ?? 0;
+      wireGroupIndex[wire.group] = index + 1;
+      const color = colors[wire.group]?.[index] || (/terra|retorno|GND/i.test(wire.name)?"#354258":wire.a.includes("3V3")?"#9b690a":"#bd3845");
+      const points=[point(wire.a),...(bends[wire.id]||[]),point(wire.b)];
+      const path = points.map(([x,y],i) => {
+        if(i===0) return "M"+x+","+y;
+        if(i===points.length-1) return "L"+x+","+y;
+        const near = ([px,py]) => {
+          const ratio=Math.min(.45,7/(Math.hypot(px-x,py-y)||1));
+          return [x+(px-x)*ratio,y+(py-y)*ratio].join(",");
+        };
+        return "L"+near(points[i-1])+"Q"+x+","+y+" "+near(points[i+1]);
+      }).join(" ");
+      shape(group,"path",{d:path,fill:"none",class:"tc-wire-hit"});
+      shape(group,"path",{d:path,fill:"none",class:"tc-wire-line",stroke:color,"stroke-linecap":"round"});
+      for(const [cx,cy] of [points[0],points.at(-1)]) circle(group,cx,cy,2.8,color,{stroke:"#fff","stroke-width":.7});
+      shape(group,"title",{},description(wire));
+      group.addEventListener("click",()=>pickWire(selectedWire===wire?null:wire));
+      group.addEventListener("keydown",event=>{
+        if(event.key==="Enter"||event.key===" "){event.preventDefault();group.dispatchEvent(new Event("click"));}
+      });
+      wireNodes.set(wire,group);
+    }
+  }
+  function pickWire(wire) {
+    selectedWire=wire;
+    const filter=get("tc-filter").value;
+    for(const [entry,node] of wireNodes) {
+      node.toggleAttribute("hidden",filter!=="all"&&entry.group!==filter);
+      node.toggleAttribute("data-active",entry===wire);
+      node.toggleAttribute("data-dim",Boolean(wire)&&entry!==wire);
+      node.setAttribute("aria-pressed",String(entry===wire));
+    }
+    detail.textContent=wire?description(wire)+(wire.info?" · "+wire.info:""):"Selecione um fio para ver quais pinos ele liga.";
+  }
+  function render() {
+    const playlist = disc===null ? null : songs[disc];
+    const tag = activeTag===null ? null : songs[activeTag];
+    const power = get("tc-power");
+    power.textContent=powered?"Parar simulação":"Iniciar simulação";
+    power.setAttribute("aria-pressed",String(powered));
+    get("tc-status").textContent=!powered?"Simulação desligada":tag?"Tag lida · UID "+tagUids[activeTag]:playlist?"Tag retirada · a faixa continua":"Leitor ligado · aguardando tag";
+    get("tc-track").textContent=playlist?playlist.tracks[track].name:"Nenhuma faixa";
+    get("tc-track-info").textContent=playlist?playlist.name+" · Faixa "+(track+1)+" de "+playlist.tracks.length+" · áudio de exemplo":"As músicas desta bancada são exemplos.";
+    get("tc-next").disabled=!playlist||playlist.tracks.length<2;
+    get("tc-remove").disabled=!tag;
+    get("tc-drop").toggleAttribute("data-tag",Boolean(tag));
+    get("tc-drop-title").textContent=tag?"Tag "+tag.name:"Aproxime a tag";
+    get("tc-drop-state").textContent=tag?tagUids[activeTag]:"Antena do RC522";
+    for(const [i,button] of [...get("tc-tags").children].entries()){
+      button.disabled=!powered;
+      button.setAttribute("aria-pressed",String(activeTag===i));
+    }
+  }
+  function setVolume() {
+    const value=Number(get("tc-volume").value);
+    get("tc-volume-value").value=value+"%";
+    if(gain) gain.gain.setTargetAtTime(value/100*.25,audio.currentTime,.025);
+  }
+  function enableAudio() {
+    try {
+      if(!audio) {
+        audio=new AudioContext();
+        gain=audio.createGain();
+        gain.connect(audio.destination);
+        setVolume();
+      }
+      audio.resume().catch(()=>{});
+    } catch {}
+  }
+  function stopAudio() {
+    clearInterval(timer);
+    for(const voice of playingVoices) voice.stop();
+    playingVoices.clear();
+  }
+  function playTick() {
+    if(!audio||audio.state!=="running") return;
+    const song=songs[disc].tracks[track];
+    const note=song.notes[notesPlayed++%song.notes.length];
+    const time=audio.currentTime+.01;
+    for(const [offset,level,type,decay] of [[0,.28,"triangle",.22],[-12,.12,"sine",.4]]) {
+      const voice=audio.createOscillator(), envelope=audio.createGain();
+      voice.frequency.value=440*2**((note+offset-69)/12);
+      voice.type=type;
+      envelope.gain.setValueAtTime(.001,time);
+      envelope.gain.linearRampToValueAtTime(level,time+.028);
+      envelope.gain.exponentialRampToValueAtTime(.001,time+decay);
+      voice.connect(envelope).connect(gain);
+      voice.onended=()=>{playingVoices.delete(voice);voice.disconnect();envelope.disconnect();};
+      playingVoices.add(voice);
+      voice.start(time);
+      voice.stop(time+decay+.01);
+    }
+  }
+  function restartAudio() {
+    stopAudio();
+    enableAudio();
+    notesPlayed=0;
+    playTick();
+    timer=setInterval(playTick,30000/songs[disc].tracks[track].tempo);
+  }
+  function scan(id) {
+    if(!powered||activeTag===id) return;
+    activeTag=id;
+    disc=id;
+    track=0;
+    restartAudio();
+    render();
+  }
+  function isOverReader(x,y) {
+    const element=document.elementFromPoint(x,y);
+    return Boolean(element?.closest("#tc-drop"));
+  }
+  function attachTag(button,index) {
+    button.addEventListener("click",()=>{if(performance.now()>=ignoreClickUntil)scan(index);});
+    button.addEventListener("pointerdown",event=>{
+      if(!powered||event.button!==0||drag)return;
+      drag={pointer:event.pointerId,x:event.clientX,y:event.clientY,ghost:null};
+      button.setPointerCapture(event.pointerId);
+    });
+    button.addEventListener("pointermove",event=>{
+      if(drag?.pointer!==event.pointerId)return;
+      const {clientX:x,clientY:y}=event;
+      if(!drag.ghost&&Math.hypot(x-drag.x,y-drag.y)<7)return;
+      if(!drag.ghost){
+        drag.ghost=document.createElement("div");
+        drag.ghost.className="tc-ghost";
+        drag.ghost.textContent=songs[index].name;
+        drag.ghost.style.setProperty("--tag",tagColors[index]);
+        document.body.append(drag.ghost);
+      }
+      drag.ghost.style.left=x+"px";
+      drag.ghost.style.top=y+"px";
+      get("tc-drop").toggleAttribute("data-hover",isOverReader(x,y));
+    });
+    function finish(event) {
+      if(drag?.pointer!==event.pointerId)return;
+      if(drag.ghost){
+        ignoreClickUntil=performance.now()+250;
+        drag.ghost.remove();
+        if(event.type==="pointerup"&&isOverReader(event.clientX,event.clientY))scan(index);
+      }
+      get("tc-drop").removeAttribute("data-hover");
+      drag=null;
+    }
+    for(const type of ["pointerup","pointercancel","lostpointercapture"])button.addEventListener(type,finish);
+  }
+
+  buildBoard();
+  songs.forEach((item,index)=>{
+    const button=document.createElement("button");
+    button.type="button";
+    button.className="tc-tag";
+    button.style.setProperty("--tag",tagColors[index]);
+    button.innerHTML="<i aria-hidden='true'></i><span></span><small></small>";
+    button.querySelector("span").textContent=item.name;
+    button.querySelector("small").textContent=item.tracks.length===1?"1 faixa":item.tracks.length+" faixas";
+    get("tc-tags").append(button);
+    attachTag(button,index);
+  });
+  get("tc-filter").addEventListener("change",()=>pickWire(null));
+  get("tc-power").addEventListener("click",()=>{
+    powered=!powered;
+    if(powered)enableAudio();
+    else {activeTag=disc=null;track=0;stopAudio();}
+    render();
+  });
+  get("tc-remove").addEventListener("click",()=>{activeTag=null;render();});
+  get("tc-next").addEventListener("click",()=>{
+    if(disc===null)return;
+    track=(track+1)%songs[disc].tracks.length;
+    restartAudio();
+    render();
+  });
+  get("tc-volume").addEventListener("input",setVolume);
+
+  render();
+})();</script></body></html>
