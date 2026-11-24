@@ -19,7 +19,7 @@ h2,h3{font-size:12pt;break-after:avoid;margin:0 0 .7em}p{text-align:justify;text
 .diagram,.table{overflow:visible}svg{min-width:0}figure,tr,svg{break-inside:avoid}thead{display:table-header-group}table{font:10pt/1.2 "Times New Roman",serif}caption,figcaption{text-align:left;margin-bottom:.4em;font-size:10pt;line-height:1}a{color:inherit}
 }
 </style>
-<script src="operacao.js" defer></script>
+<script src="operacao.js?v=2" defer></script>
 </head>
 <body>
 <header><nav aria-label="Navegação da Jukeboox"><a href="./">Circuito 3D</a><a href="simulacao.html#thinkercad">Thinkercad</a><a href="prototipo.html">Volume e músicas</a><a href="entrega.html" aria-current="page">Entrega do projeto</a></nav></header>
@@ -37,7 +37,7 @@ h2,h3{font-size:12pt;break-after:avoid;margin:0 0 .7em}p{text-align:justify;text
 </div>
 <h1 class="screen">Jukeboox</h1>
 <p class="screen">Documento do projeto · Tema 5 · Protótipo RFID</p>
-<p class="screen"><a href="#operacao">Simular estados</a> · <a href="#testes">Plano de testes</a> · <a href="#bom">Lista de materiais</a> · <button type="button" onclick="window.print()">Imprimir versão acadêmica / salvar em PDF</button></p>
+<p class="screen"><a href="#operacao">Simular estados</a> · <a href="#testes">Plano de testes</a> · <a href="#bom">Lista de materiais</a> · <a href="#roteiro">Roteiro do vídeo</a> · <button type="button" onclick="window.print()">Imprimir versão acadêmica / salvar em PDF</button></p>
 <details class="screen"><summary>Preencher dados da capa e da folha de rosto</summary>
 <div class="actions">
 <label>Instituição <input id="capa-instituicao" type="text"></label>
@@ -61,6 +61,7 @@ window.addEventListener("beforeprint", () => {
 </section>
 <section id="operacao">
 <h2>Simulador dos estados</h2>
+<p>Esta demonstração executa um modelo dos estados e eventos no navegador. A equivalência ao requisito de Tinkercad da disciplina depende de aprovação do professor. A validação da montagem física é uma etapa separada.</p>
 <p>Modelo funcional do firmware no navegador. O botão “Fim de faixa” representa o evento que o DFPlayer envia pela UART. Para ouvir a prévia sonora e inspecionar os fios, abra a bancada.</p>
 <p><a href="simulacao.html#thinkercad">Abrir bancada interativa</a></p>
 <output aria-live="polite"></output>
@@ -139,11 +140,33 @@ window.addEventListener("beforeprint", () => {
 <h2><span class="print-only">2.5 </span>Firmware e código-fonte</h2>
 <p><a href="https://github.com/gusstavovp/jukeboox-circuito-3d/tree/main/firmware/Jukeboox_Web">Firmware ESP32 no mesmo repositório do site</a> · <a href="firmware/Jukeboox_Web/Jukeboox_Web.ino" download>Sketch .ino</a> · <a href="firmware/Jukeboox_Web/Painel.h" download>Painel.h</a> · <a href="firmware/Jukeboox_Web/LEIA-ME.txt">Instalação e cadastro de tags</a></p>
 <p>O Arduino IDE precisa do core ESP32 e das bibliotecas MFRC522 e DFRobotDFPlayerMini. Cadastre os UIDs reais e coloque as faixas em <code>/MP3/0001.mp3</code> a <code>/MP3/0004.mp3</code>.</p>
-<p>Simulação pública hospedada neste site. A execução no navegador cobre os estados e eventos do firmware. A compilação para ESP32 e os testes da montagem física estão pendentes.</p>
+<p>Simulação pública hospedada neste site. A execução no navegador cobre os estados e eventos do firmware. A validação em bancada, incluindo a demonstração de uma falha no produto físico, precisa de resultados próprios.</p>
+</section>
+<section id="roteiro" class="screen">
+<h2>Roteiro do vídeo da Parte 1</h2>
+<p>Item 4.2(c). Seis falas e duração planejada de 2 min 56 s. Abram a <a href="simulacao.html#thinkercad">bancada</a> e o <a href="#operacao">simulador</a> antes de gravar. Nas falhas, mantenham a mensagem visível por dois segundos.</p>
+<h3>0:00–0:26 · Paulo Gabryel · Produto e escopo</h3>
+<p><strong>Na tela.</strong> Abra a bancada interativa e mostre o gabinete, o disco e o circuito.</p>
+<p><strong>Fala.</strong> “Este é o Jukeboox, uma caixa de música inspirada nas vitrolas, pensada para crianças e para quem gosta desse estilo clássico. O disco tem uma tag RFID escondida sob a tampa. A manivela é decorativa. Vamos demonstrar o circuito e a lógica de operação no simulador web.”</p>
+<h3>0:26–0:53 · Gustavo Araujo · Circuito e alimentação</h3>
+<p><strong>Na tela.</strong> Aponte para o jack P4, os trilhos, o ESP32 fora da protoboard, o RC522, o DFPlayer e os dois falantes.</p>
+<p><strong>Fala.</strong> “Os cinco volts entram pelo jack P4 e os jumpers distribuem a alimentação. O ESP32 fornece três vírgula três volts ao RC522. O DFPlayer Mini fica na protoboard, lê os arquivos do microSD e envia o sinal ao amplificador, que aciona os dois alto-falantes.”</p>
+<h3>0:53–1:26 · Guilherme · Partida, cadastro e avanço</h3>
+<p><strong>Na tela.</strong> No simulador, mostre Desligado. Clique em Ligar / reiniciar, Aproximar álbum, ajuste o volume para 15, clique em Próxima faixa e depois uma vez em Fim de faixa.</p>
+<p><strong>Fala.</strong> “Ao ligar, o sistema fica aguardando tag. O leitor identifica o UID e o ESP32 consulta o cadastro. A tag do álbum inicia a primeira faixa. Pelo painel, ajustamos o volume e avançamos manualmente. O botão Fim de faixa simula o aviso do DFPlayer, que provoca o avanço automático.”</p>
+<h3>1:26–1:55 · Pedro Víctor · Fim do álbum e troca de tag</h3>
+<p><strong>Na tela.</strong> Clique em Fim de faixa para mostrar Encerrado. Clique em Repetir seleção, depois em Aproximar tag desconhecida e em Aproximar faixa avulsa.</p>
+<p><strong>Fala.</strong> “Quando termina a última faixa, a playlist fica encerrada. Podemos repetir a seleção pelo painel. Uma tag desconhecida mantém a música atual. Quando apresentamos outra tag cadastrada, o sistema troca para a faixa associada a ela.”</p>
+<h3>1:55–2:24 · Raycia Jordana · Falha do microSD</h3>
+<p><strong>Na tela.</strong> Desmarque microSD inserido enquanto a faixa avulsa toca. Mostre a mensagem. Marque a caixa novamente e clique em Ligar / reiniciar.</p>
+<p><strong>Fala.</strong> “Na primeira falha, simulamos a retirada do microSD durante a reprodução. A música para e o painel informa que o cartão está indisponível. Depois de reinserir o cartão e reiniciar, o sistema volta a aguardar uma tag.”</p>
+<h3>2:24–2:56 · Gustavo Lima · Falha do RC522 e resultados</h3>
+<p><strong>Na tela.</strong> Desmarque RC522 conectado e clique em Ligar / reiniciar. Mostre a falha. Marque a caixa, reinicie e abra o plano de testes.</p>
+<p><strong>Fala.</strong> “Na segunda falha, ligamos com o leitor RFID desconectado. O painel informa que o RC522 está sem comunicação. Reconectamos o leitor e reiniciamos para voltar à espera. O plano compara os resultados esperados e observados. Os dezessete casos passaram no modelo web.”</p>
 </section>
 <section class="print-only academic-primary">
 <h2>3 CONCLUSÃO</h2>
-<p>O modelo de operação passou nos 15 casos simulados, incluindo falhas do microSD e do leitor RFID. A próxima etapa é compilar o firmware para o ESP32 e validar a reprodução e o painel Wi-Fi com a montagem física.</p>
+<p>O modelo de operação passou nos 17 casos simulados, incluindo falhas do microSD e do leitor RFID. A próxima etapa é compilar o firmware para o ESP32 e validar a reprodução e o painel Wi-Fi com a montagem física.</p>
 </section>
 <section class="print-only academic-primary">
 <h2 class="academic-centered">REFERÊNCIAS</h2>
