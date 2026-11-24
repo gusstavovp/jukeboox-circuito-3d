@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Jukeboox · Entrega do protótipo</title>
+<style>
+:root{color-scheme:dark;--bg:#0b1019;--panel:#111c2e;--line:#34465d;--fg:#edf4fb;--muted:#bac9d9;--accent:#8bf6d6;font:16px/1.55 system-ui,sans-serif}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg)}header{border-bottom:1px solid var(--line)}nav,main{width:min(1120px,calc(100% - 32px));margin:auto}nav{display:flex;gap:.6rem 1.25rem;flex-wrap:wrap;padding:15px 0}a{color:var(--accent)}nav a{text-decoration:none}nav a[aria-current]{font-weight:bold}main{padding:30px 0 60px}h1{font-size:clamp(2rem,5vw,3.5rem);line-height:1.1;margin:.2em 0}h2{margin:.1em 0 .5em}h3{margin-bottom:.25em}section{margin-top:20px;padding:clamp(14px,3vw,25px);border:1px solid var(--line);border-radius:14px;background:var(--panel)}p{margin:.55em 0;color:var(--muted)}.actions{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}button{font:inherit;color:var(--fg);background:#20334b;border:1px solid #4e6c89;border-radius:7px;padding:.4em .7em;cursor:pointer}button:hover{background:#304963}button:disabled{opacity:.45;cursor:default}button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:3px}output{display:block;color:var(--accent);border:1px solid var(--line);background:var(--bg);border-radius:7px;padding:10px 14px;margin:12px 0}fieldset{border:1px solid var(--line);border-radius:7px}fieldset label{display:inline-block;margin-right:16px}input{accent-color:var(--accent)}.table{overflow:auto}table{border-collapse:collapse;width:100%;font-size:.91rem}th,td{text-align:left;vertical-align:top;border-bottom:1px solid var(--line);padding:.42em .55em}th{color:var(--accent)}svg{display:block;width:100%;max-width:800px;margin:auto;color:var(--fg);min-width:540px}.diagram{overflow:auto}svg text{fill:currentColor;font:15px system-ui}svg rect{fill:var(--panel);stroke:var(--accent);stroke-width:1.5}svg path{fill:none;stroke:var(--fg);stroke-width:1.4}svg marker path{fill:var(--fg)}
+@media print{:root{color-scheme:light;--bg:white;--panel:white;--line:#bbb;--fg:#111;--muted:#333;--accent:#145348;font-size:11pt}header,.screen,#operacao{display:none}main{width:auto;padding:0}section{padding:0;border:none;margin:1em 0}.diagram,.table{overflow:visible}svg{min-width:0}tr,svg{break-inside:avoid}thead{display:table-header-group}h2,h3{break-after:avoid}a{color:inherit}}
+</style>
+<script src="operacao.js" defer></script>
+</head>
+<body>
+<header><nav aria-label="Navegação da Jukeboox"><a href="./">Circuito 3D</a><a href="simulacao.html#thinkercad">Thinkercad</a><a href="prototipo.html">Volume e músicas</a><a href="entrega.html" aria-current="page">Entrega do projeto</a></nav></header>
+<main>
+<h1>Jukeboox</h1>
+<p>Documento do projeto · Tema 5 · Protótipo RFID</p>
+<p class="screen"><a href="#operacao">Simular estados</a> · <a href="#testes">Plano de testes</a> · <a href="#bom">Lista de materiais</a> · <button type="button" onclick="window.print()">Imprimir / salvar em PDF</button></p>
+<section>
+<h2>Produto e público-alvo</h2>
+<p>Jukebox de mesa inspirada em vitrolas clássicas. A criança ou pessoa que aprecia essa estética troca o disco decorativo e aproxima a tag, escondida sob sua tampa, para selecionar uma faixa ou playlist. A manivela é decorativa e independente da reprodução.</p>
+<h3>Requisitos</h3>
+<ul><li>Reconhecer tags cadastradas pelo RC522 e selecionar arquivos locais no microSD usando o DFPlayer Mini.</li><li>Exibir a faixa no painel Wi-Fi do ESP32 e permitir ajuste de volume entre 0 e 20, avanço e repetição ao término.</li><li>Avançar automaticamente ao receber o fim de faixa pela UART. Uma tag desconhecida ou a releitura da mesma tag preserva a reprodução; a troca para uma tag cadastrada seleciona a nova lista.</li><li>Registrar falha de leitura do RC522 na partida e de microSD/DFPlayer. Após corrigir a causa, reiniciar.</li></ul>
+</section>
+<section id="operacao">
+<h2>Simulador dos estados</h2>
+<p>Modelo funcional do firmware no navegador. O botão “Fim de faixa” representa o evento que o DFPlayer envia pela UART. Para ouvir a prévia sonora e inspecionar os fios, abra a bancada.</p>
+<p><a href="simulacao.html#thinkercad">Abrir bancada interativa</a></p>
+<output aria-live="polite"></output>
+<div class="actions"><button data-action="start">Ligar / reiniciar</button><button data-action="off">Desligar</button><button data-action="scan" data-value="04A10110">Aproximar álbum</button><button data-action="scan" data-value="04A10220">Aproximar faixa avulsa</button><button data-action="scan" data-value="DEADBEEF">Aproximar tag desconhecida</button></div>
+<div class="actions"><button data-action="next">Próxima faixa</button><button data-action="finish">Fim de faixa</button><button data-action="replay">Repetir seleção</button><label>Volume <input id="volume-modelo" data-action="volume" type="range" min="0" max="20" value="10"></label></div>
+<fieldset><legend>Condições da bancada</legend><label><input type="checkbox" data-action="sd" checked> microSD inserido</label><label><input type="checkbox" data-action="reader" checked> RC522 conectado</label></fieldset>
+<p>Para simular o RC522 desconectado, desmarque a caixa e reinicie. Para testar o microSD, retire-o durante uma faixa ou antes de ligar.</p>
+</section>
+<section id="estados">
+<h2>Diagrama de estados</h2>
+<div class="diagram"><svg viewBox="0 0 800 305" role="img" aria-label="Desligado inicia em Aguardando ou Falha. Tag cadastrada inicia Tocando. Fim da última faixa encerra. Repetição ou troca reinicia. A falha do microSD interrompe a reprodução.">
+<defs><marker id="seta" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0L8 4L0 8Z"/></marker></defs>
+<g marker-end="url(#seta)"><path d="M155 100H282"/><path d="M447 100H613"/><path d="M90 126V220H283"/><path d="M690 126V205"/><path d="M614 240H537V126H614"/><path d="M614 120V170H378V206"/></g>
+<g><rect x="18" y="75" width="137" height="51" rx="8"/><rect x="283" y="75" width="164" height="51" rx="8"/><rect x="614" y="75" width="153" height="51" rx="8"/><rect x="283" y="206" width="164" height="51" rx="8"/><rect x="614" y="206" width="153" height="51" rx="8"/></g>
+<g text-anchor="middle"><text x="86" y="106">Desligado</text><text x="365" y="106">Aguardando tag</text><text x="690" y="106">Tocando</text><text x="365" y="237">Falha</text><text x="690" y="237">Encerrado</text><text x="216" y="88">Partida OK</text><text x="530" y="87">Tag cadastrada</text><text x="180" y="211">Falha na partida</text><text x="465" y="161">Erro microSD</text><text x="732" y="156">Fim da</text><text x="732" y="176">seleção</text><text x="581" y="268">Repetir / trocar tag</text></g></svg></div>
+<p>Avanço manual, fim de faixa intermediária, volume e troca por outra tag válida mantêm o estado Tocando. Erro do DFPlayer pode levar à falha também em espera ou após o término. Desligar interrompe qualquer estado. Após corrigir a falha, ligue ou reinicie.</p>
+</section>
+<section id="circuito">
+<h2>Esquema elétrico e tabela de pinos</h2>
+<p><a href="simulacao.html#thinkercad">Ver o esquema elétrico interativo com as 28 ligações</a>. O ESP32 fica fora da protoboard e o DFPlayer Mini fica encaixado nela. O jack distribui 5 V CC pelos trilhos unidos com jumpers. O RC522 recebe 3,3 V do ESP32.</p>
+<div class="diagram"><svg viewBox="0 0 800 270" role="img" aria-label="Fonte e jack alimentam trilhos de cinco volts e terra. Os trilhos alimentam ESP32, DFPlayer e PAM8406. O ESP32 alimenta o RC522 e comunica por SPI e UART. O DFPlayer alimenta a entrada de áudio do PAM8406, que aciona dois falantes.">
+<g><path d="M170 36H265M415 36H735M330 36V116M495 36V116M662 36V116M170 141H265M415 141H440M550 141H607M662 167V213"/></g>
+<g><rect x="20" y="13" width="150" height="47" rx="8"/><rect x="265" y="13" width="150" height="47" rx="8"/><rect x="20" y="116" width="150" height="51" rx="8"/><rect x="265" y="116" width="150" height="51" rx="8"/><rect x="440" y="116" width="110" height="51" rx="8"/><rect x="607" y="116" width="110" height="51" rx="8"/><rect x="587" y="213" width="150" height="46" rx="8"/></g>
+<g text-anchor="middle"><text x="95" y="42">Fonte 5 V + jack</text><text x="340" y="42">Trilhos 5 V / GND</text><text x="95" y="147">RC522</text><text x="340" y="147">ESP32</text><text x="495" y="147">DFPlayer</text><text x="662" y="147">PAM8406</text><text x="662" y="242">Falantes L / R</text><text x="217" y="130">SPI</text><text x="217" y="162">3,3 V</text><text x="430" y="182">UART</text><text x="578" y="130">DAC</text><text x="690" y="196">BTL</text></g></svg></div>
+<div class="table"><table><thead><tr><th>Origem</th><th>Destino</th><th>Função</th></tr></thead><tbody>
+<tr><td>Fonte 5 V CC, positivo e retorno</td><td>Jack P4, centro e manga conforme a polaridade da montagem</td><td>Alimentação externa</td></tr>
+<tr><td>Jack + e −</td><td>Trilhos +5 V A e GND A</td><td>Entrada na protoboard</td></tr>
+<tr><td>+5 V A / GND A</td><td>+5 V B / GND B por jumpers separados</td><td>Distribuição</td></tr>
+<tr><td>+5 V A / GND A</td><td>ESP32 5V/VIN e GND</td><td>Alimentação externa do ESP32</td></tr>
+<tr><td>+5 V B / GND B</td><td>DFPlayer VCC/GND e PAM8406 5V/GND</td><td>Alimentação do áudio</td></tr>
+<tr><td>GND B</td><td>RC522 GND e PAM8406 GND de áudio</td><td>Referência comum</td></tr>
+<tr><td>ESP32 3V3</td><td>RC522 3V3</td><td>Alimentação do leitor</td></tr>
+<tr><td>ESP32 GPIO5 / GPIO18 / GPIO23</td><td>RC522 SDA/SS / SCK / MOSI</td><td>SPI</td></tr>
+<tr><td>RC522 MISO</td><td>ESP32 GPIO19</td><td>SPI</td></tr>
+<tr><td>ESP32 GPIO22</td><td>RC522 RST</td><td>Reset</td></tr>
+<tr><td>ESP32 GPIO21 (TX)</td><td>DFPlayer RX</td><td>Comandos UART a 9600 baud</td></tr>
+<tr><td>DFPlayer TX</td><td>ESP32 GPIO32 (RX)</td><td>Eventos UART</td></tr>
+<tr><td>DFPlayer DAC_L / DAC_R</td><td>PAM8406 LIN / RIN</td><td>Áudio estéreo de linha</td></tr>
+<tr><td>PAM8406 LOUT+/LOUT− e ROUT+/ROUT−</td><td>Falantes esquerdo e direito, um par por canal</td><td>Saídas BTL</td></tr>
+</tbody></table></div>
+<p>RC522 IRQ, DFPlayer BUSY e SPK1/SPK2 ficam livres. O microSD entra no DFPlayer e a tag é lida por aproximação.</p>
+</section>
+<section id="testes">
+<h2>Plano de testes</h2>
+<p>Resultados obtidos pela execução do modelo de estados do navegador. Os cenários de falha cobrem o microSD durante a faixa e na partida, além do RC522 desconectado na partida.</p>
+<p><strong id="placar" aria-live="polite"></strong> <button class="screen" id="retestar">Executar novamente</button></p>
+<div class="table"><table><thead><tr><th>Caso</th><th>Condição simulada</th><th>Esperado</th><th>Obtido</th><th>Resultado</th></tr></thead><tbody id="resultados"></tbody></table></div>
+<noscript>Ative o JavaScript para executar os casos e preencher os resultados.</noscript>
+</section>
+<section id="bom">
+<h2>Lista de materiais (BOM)</h2>
+<p>Origem prevista com base nos itens informados do kit e nos componentes da montagem estéreo do site.</p>
+<div class="table"><table><thead><tr><th>Material</th><th>Qtd.</th><th>Origem prevista</th></tr></thead><tbody>
+<tr><td>ESP32 DOIT DevKit V1 (ESP32-WROOM-32)</td><td>1</td><td>Kit</td></tr>
+<tr><td>DFPlayer Mini MP3-TF-16P</td><td>1</td><td>Kit</td></tr>
+<tr><td>Leitor RC522 3,3 V</td><td>1</td><td>Kit</td></tr>
+<tr><td>Tags RFID compatíveis com o RC522</td><td>2 ou mais</td><td>Kit; equipe providencia extras para mais discos</td></tr>
+<tr><td>microSD de 8 GB, FAT32</td><td>1</td><td>Kit</td></tr>
+<tr><td>Protoboard e cabos jumper</td><td>1 + 1 jogo</td><td>Kit</td></tr>
+<tr><td>Alto-falantes compatíveis com o PAM8406</td><td>2</td><td>Kit (1 de teste); equipe completa o par conforme a compatibilidade</td></tr>
+<tr><td>Amplificador PAM8406 HW-301</td><td>1</td><td>Equipe</td></tr>
+<tr><td>Fonte de tomada regulada 5 V CC e jack P4 compatível</td><td>1 de cada</td><td>Equipe</td></tr>
+<tr><td>Cabo USB de dados para programação</td><td>1</td><td>Equipe, se o kit não incluir</td></tr>
+<tr><td>Gabinete, tampa, manivela decorativa, discos com tampas e fixadores impressos</td><td>1 conjunto</td><td>Equipe (filamento e impressão 3D)</td></tr>
+<tr><td>Arquivos MP3 para teste e uso</td><td>4 para o exemplo</td><td>Equipe</td></tr>
+</tbody></table></div>
+</section>
+<section id="firmware">
+<h2>Firmware e código-fonte</h2>
+<p><a href="https://github.com/gusstavovp/jukeboox-circuito-3d/tree/main/firmware/Jukeboox_Web">Firmware ESP32 no mesmo repositório do site</a> · <a href="firmware/Jukeboox_Web/Jukeboox_Web.ino" download>Sketch .ino</a> · <a href="firmware/Jukeboox_Web/Painel.h" download>Painel.h</a> · <a href="firmware/Jukeboox_Web/LEIA-ME.txt">Instalação e cadastro de tags</a></p>
+<p>O Arduino IDE precisa do core ESP32 e das bibliotecas MFRC522 e DFRobotDFPlayerMini. Cadastre os UIDs reais e coloque as faixas em <code>/MP3/0001.mp3</code> a <code>/MP3/0004.mp3</code>.</p>
+<p>Simulação pública hospedada neste site. A execução no navegador cobre os estados e eventos do firmware. A compilação para ESP32 e os testes da montagem física estão pendentes.</p>
+</section>
+</main>
+</body>
+</html>
