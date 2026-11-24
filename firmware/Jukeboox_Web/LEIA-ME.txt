@@ -1,0 +1,35 @@
+Jukeboox — instalação e teste
+
+1. No Arduino IDE, instale “esp32” da Espressif Systems no Gerenciador
+   de Placas e as bibliotecas MFRC522 e DFRobotDFPlayerMini.
+   Abra Jukeboox_Web.ino mantendo Painel.h na mesma pasta.
+   Selecione DOIT ESP32 DEVKIT V1 e a porta USB da placa.
+
+2. Confira a fiação com a alimentação desligada. RC522: 3V3, GND,
+   SDA/SS → GPIO5, SCK → GPIO18, MISO → GPIO19, MOSI → GPIO23,
+   RST → GPIO22. DFPlayer: RX ← GPIO21, TX → GPIO32 e GND comum.
+   Confirme o nível do TX do DFPlayer antes de ligá-lo ao GPIO32.
+   Para gravar pela USB, desconecte a alimentação externa da ESP32.
+
+3. Formate o microSD em FAT32 e crie a pasta MP3. Copie para ela
+   0001.mp3, 0002.mp3, 0003.mp3 e 0004.mp3. Insira no DFPlayer
+   antes de ligar. No sketch, troque SENHA_WIFI por uma senha de
+   pelo menos 8 caracteres e grave o firmware.
+
+4. Abra o Monitor Serial a 115200 baud. Aproxime uma tag por vez.
+   Copie o valor mostrado após “UID:”, sem espaços. O painel
+   também mostra a última tag lida, inclusive antes do cadastro.
+   Substitua SUBSTITUA_PELO_UID_1 e SUBSTITUA_PELO_UID_2 no sketch
+   e grave novamente. Ajuste os títulos e números nas listas:
+   1, 2 e 3 formam a playlist de exemplo, e 4 é a faixa avulsa.
+
+5. Conecte o celular ou computador ao Wi-Fi Jukeboox e abra
+   http://192.168.4.1 (ou o endereço mostrado no Monitor Serial).
+   Se o celular avisar que a rede está sem internet, mantenha a
+   conexão. Aproxime a tag da playlist, confira o título, ajuste
+   o volume e toque em Próxima faixa. Deixe uma faixa terminar
+   para testar o avanço automático. Teste também a tag avulsa.
+
+   Se aparecer falha, confira o Monitor Serial, o cartão e a fiação.
+   Após corrigir a causa, reinicie a placa.
+
