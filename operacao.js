@@ -11,7 +11,7 @@
     if (action === "off") return { ...initial(), sd: state.sd, reader: state.reader };
     if (action === "sd" || action === "reader") {
       next[action] = value;
-      if (!value && state.status !== "off" && action === "sd") {
+      if (!value && state.status !== "off" && state.status !== "fault" && action === "sd") {
         Object.assign(next, { status: "fault", index: -1, fault: "Cartão microSD indisponível" });
       }
       return next;
@@ -50,7 +50,9 @@
     ["12", "Desligar durante a reprodução", [...playing, ["off"]], "Desligado"],
     ["13", "Reler a mesma tag após avançar", [...playing, ["next"], ["scan", "04A10110"]], "Tocando · Luzes da cidade"],
     ["14", "Inicializar sem microSD", [["sd", false], ["start"]], "Falha · Cartão microSD indisponível"],
-    ["15", "Trocar para a tag avulsa durante o álbum", [...playing, ["scan", "04A10220"]], "Tocando · Um lado do disco"]
+    ["15", "Trocar para a tag avulsa durante o álbum", [...playing, ["scan", "04A10220"]], "Tocando · Um lado do disco"],
+    ["16", "Reconectar RC522 e reiniciar", [["reader", false], ["start"], ["reader", true], ["start"]], "Aguardando tag"],
+    ["17", "Reinserir microSD sem reiniciar", [...playing, ["sd", false], ["sd", true], ["scan", "04A10220"]], "Falha · Cartão microSD indisponível"]
   ];
   function describe(s) {
     return [labels[s.status], s.fault, tags[s.selected]?.[s.index], s.volume !== 10 ? "Volume " + s.volume : "", s.note].filter(Boolean).join(" · ");
