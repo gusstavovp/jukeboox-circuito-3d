@@ -144,24 +144,24 @@ window.addEventListener("beforeprint", () => {
 </section>
 <section id="roteiro" class="screen">
 <h2>Roteiro do vídeo da Parte 1</h2>
-<p>Item 4.2(c). Seis falas e duração planejada de 2 min 56 s. Abram a <a href="simulacao.html#thinkercad">bancada</a> e o <a href="#operacao">simulador</a> antes de gravar. Nas falhas, mantenham a mensagem visível por dois segundos.</p>
-<h3>0:00–0:26 · Paulo Gabryel · Produto e escopo</h3>
-<p><strong>Na tela.</strong> Abra a bancada interativa e mostre o gabinete, o disco e o circuito.</p>
+<p>Item 4.2(c). Duas pessoas e duração planejada de 2 min 56 s. A Pessoa 1 apresenta até 1:26 e a Pessoa 2 conclui. Abram o <a href="./">visualizador 3D</a>, a <a href="simulacao.html#thinkercad">bancada</a> e o <a href="#operacao">simulador de estados</a> antes de gravar. Nas falhas, mantenham a mensagem visível por dois segundos.</p>
+<h3>0:00–0:26 · Pessoa 1 · Produto e escopo</h3>
+<p><strong>Na tela.</strong> Abra o <a href="./">visualizador 3D</a> e mostre o gabinete, o disco e a manivela.</p>
 <p><strong>Fala.</strong> “Este é o Jukeboox, uma caixa de música inspirada nas vitrolas, pensada para crianças e para quem gosta desse estilo clássico. O disco tem uma tag RFID escondida sob a tampa. A manivela é decorativa. Vamos demonstrar o circuito e a lógica de operação no simulador web.”</p>
-<h3>0:26–0:53 · Gustavo Araujo · Circuito e alimentação</h3>
-<p><strong>Na tela.</strong> Aponte para o jack P4, os trilhos, o ESP32 fora da protoboard, o RC522, o DFPlayer e os dois falantes.</p>
-<p><strong>Fala.</strong> “Os cinco volts entram pelo jack P4 e os jumpers distribuem a alimentação. O ESP32 fornece três vírgula três volts ao RC522. O DFPlayer Mini fica na protoboard, lê os arquivos do microSD e envia o sinal ao amplificador, que aciona os dois alto-falantes.”</p>
-<h3>0:53–1:26 · Guilherme · Partida, cadastro e avanço</h3>
-<p><strong>Na tela.</strong> No simulador, mostre Desligado. Clique em Ligar / reiniciar, Aproximar álbum, ajuste o volume para 15, clique em Próxima faixa e depois uma vez em Fim de faixa.</p>
+<h3>0:26–0:53 · Pessoa 1 · Circuito e alimentação</h3>
+<p><strong>Na tela.</strong> Na <a href="simulacao.html#thinkercad">bancada</a>, filtre por Alimentação e mostre o jack P4, os trilhos, o 5V/VIN e o GND do ESP32, e os 3,3 V do RC522.</p>
+<p><strong>Fala.</strong> “O jack P4 leva cinco volts e GND comum aos trilhos. O ESP32 recebe cinco volts pelo VIN e compartilha esse GND. O ESP32 fornece três vírgula três volts ao RC522. O DFPlayer Mini fica na protoboard, lê os arquivos do microSD e envia o sinal ao amplificador, que aciona os dois alto-falantes.”</p>
+<h3>0:53–1:26 · Pessoa 1 · Partida, cadastro e avanço</h3>
+<p><strong>Na tela.</strong> No <a href="#operacao">simulador de estados</a>, mostre Desligado. Clique em Ligar / reiniciar, Aproximar álbum, ajuste o volume para 15, clique em Próxima faixa e depois uma vez em Fim de faixa.</p>
 <p><strong>Fala.</strong> “Ao ligar, o sistema fica aguardando tag. O leitor identifica o UID e o ESP32 consulta o cadastro. A tag do álbum inicia a primeira faixa. Pelo painel, ajustamos o volume e avançamos manualmente. O botão Fim de faixa simula o aviso do DFPlayer, que provoca o avanço automático.”</p>
-<h3>1:26–1:55 · Pedro Víctor · Fim do álbum e troca de tag</h3>
+<h3>1:26–1:55 · Pessoa 2 · Fim do álbum e troca de tag</h3>
 <p><strong>Na tela.</strong> Clique em Fim de faixa para mostrar Encerrado. Clique em Repetir seleção, depois em Aproximar tag desconhecida e em Aproximar faixa avulsa.</p>
 <p><strong>Fala.</strong> “Quando termina a última faixa, a playlist fica encerrada. Podemos repetir a seleção pelo painel. Uma tag desconhecida mantém a música atual. Quando apresentamos outra tag cadastrada, o sistema troca para a faixa associada a ela.”</p>
-<h3>1:55–2:24 · Raycia Jordana · Falha do microSD</h3>
+<h3>1:55–2:24 · Pessoa 2 · Falha do microSD</h3>
 <p><strong>Na tela.</strong> Desmarque microSD inserido enquanto a faixa avulsa toca. Mostre a mensagem. Marque a caixa novamente e clique em Ligar / reiniciar.</p>
 <p><strong>Fala.</strong> “Na primeira falha, simulamos a retirada do microSD durante a reprodução. A música para e o painel informa que o cartão está indisponível. Depois de reinserir o cartão e reiniciar, o sistema volta a aguardar uma tag.”</p>
-<h3>2:24–2:56 · Gustavo Lima · Falha do RC522 e resultados</h3>
-<p><strong>Na tela.</strong> Desmarque RC522 conectado e clique em Ligar / reiniciar. Mostre a falha. Marque a caixa, reinicie e abra o plano de testes.</p>
+<h3>2:24–2:56 · Pessoa 2 · Falha do RC522 e resultados</h3>
+<p><strong>Na tela.</strong> Desmarque RC522 conectado e clique em Ligar / reiniciar. Mostre a falha. Marque a caixa, reinicie e abra o <a href="#testes">plano de testes</a>.</p>
 <p><strong>Fala.</strong> “Na segunda falha, ligamos com o leitor RFID desconectado. O painel informa que o RC522 está sem comunicação. Reconectamos o leitor e reiniciamos para voltar à espera. O plano compara os resultados esperados e observados. Os dezessete casos passaram no modelo web.”</p>
 </section>
 <section class="print-only academic-primary">
