@@ -10,7 +10,7 @@ Jukebox com ESP32, leitor RFID RC522 e DFPlayer Mini. Cada tag seleciona uma fai
 | Circuito 3D e ligações | [Circuito 3D](https://gusstavovp.github.io/jukeboox-circuito-3d/) |
 | Simulação de tags e falhas | [Simulador RFID](https://gusstavovp.github.io/jukeboox-circuito-3d/simulacao.html) |
 | Demonstração do painel | [Volume e músicas](https://gusstavovp.github.io/jukeboox-circuito-3d/prototipo.html) |
-| Documentação, testes e roteiro | [Entrega do projeto](https://gusstavovp.github.io/jukeboox-circuito-3d/entrega.html) |
+| Documentação e testes | [Entrega do projeto](https://gusstavovp.github.io/jukeboox-circuito-3d/entrega.html) |
 
 ## Firmware da ESP32
 
