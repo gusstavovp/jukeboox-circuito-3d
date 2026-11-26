@@ -57,7 +57,7 @@ window.addEventListener("beforeprint", () => {
 <h2><span class="print-only">1 INTRODUÇÃO<span class="section-title">Produto e público-alvo</span></span><span class="screen">Produto e público-alvo</span></h2>
 <p>Jukebox de mesa inspirada em vitrolas clássicas. A criança ou pessoa que aprecia essa estética troca o disco decorativo e aproxima a tag, escondida sob sua tampa, para selecionar uma faixa ou playlist. A manivela é decorativa e independente da reprodução.</p>
 <h3>Requisitos</h3>
-<ul><li>Reconhecer tags cadastradas pelo RC522 e selecionar arquivos locais no microSD usando o DFPlayer Mini.</li><li>Exibir a faixa no painel Wi-Fi do ESP32 e permitir ajuste de volume entre 0 e 20, avanço e repetição ao término.</li><li>Avançar automaticamente ao receber o fim de faixa pela UART. Uma tag desconhecida ou a releitura da mesma tag preserva a reprodução; a troca para uma tag cadastrada seleciona a nova lista.</li><li>Registrar falha de leitura do RC522 na partida e de microSD/DFPlayer. Após corrigir a causa, reiniciar.</li></ul>
+<ul><li>Reconhecer tags cadastradas pelo RC522 e selecionar arquivos locais no microSD usando o DFPlayer Mini.</li><li>Exibir a faixa no painel Wi-Fi do ESP32 e permitir ajuste de volume entre 0 e 20, avanço e repetição ao término.</li><li>Avançar automaticamente ao receber o fim de faixa pela UART. Uma tag desconhecida ou a releitura da mesma tag preserva a reprodução; a troca para uma tag cadastrada seleciona a nova lista.</li><li>Registrar falha de leitura do RC522 na partida e de microSD/DFPlayer. Após corrigir a causa, reiniciar. O firmware verifica o RC522 na partida e trata os eventos de remoção do cartão ou erro reportados pelo DFPlayer durante a operação. O teste de partida sem microSD pertence ao modelo simulado.</li></ul>
 </section>
 <section id="operacao">
 <h2>Simulador dos estados</h2>
@@ -120,7 +120,7 @@ window.addEventListener("beforeprint", () => {
 <div class="table"><table><caption class="print-only">Tabela 3 – Lista de materiais do protótipo</caption><thead><tr><th>Material</th><th>Quantidade</th><th>Kit ou equipe</th></tr></thead><tbody>
 <tr><td>ESP32 DOIT DevKit V1 (ESP32-WROOM-32)</td><td>1</td><td>Equipe (compra registrada)</td></tr>
 <tr><td>DFPlayer Mini MP3-TF-16P</td><td>1</td><td>Equipe (compra registrada)</td></tr>
-<tr><td>Leitor RFID RC522 de 3,3 V</td><td>1</td><td>A confirmar no kit. Se faltar, equipe.</td></tr>
+<tr><td>Leitor RFID RC522 de 3,3 V</td><td>1</td><td>Equipe (material próprio).</td></tr>
 <tr><td>Tags compatíveis com o RC522</td><td>2 iniciais</td><td>Uma tag por disco. Aproveitar as fornecidas com o leitor e completar pela equipe.</td></tr>
 <tr><td>Cartão microSD de 8 GB, formatado em FAT32</td><td>1</td><td>Equipe (compra registrada)</td></tr>
 <tr><td>Protoboard</td><td>1</td><td>A confirmar no kit. Se faltar, equipe.</td></tr>
@@ -139,12 +139,12 @@ window.addEventListener("beforeprint", () => {
 <section id="firmware">
 <h2><span class="print-only">2.5 </span>Firmware e código-fonte</h2>
 <p><a href="https://github.com/gusstavovp/jukeboox-firmware">Repositório do firmware ESP32</a> · <a href="https://github.com/gusstavovp/jukeboox-firmware/blob/main/Jukeboox_Produto/Jukeboox_Produto.ino">Sketch .ino</a> · <a href="prototipo.html#guide">Instalação e cadastro de tags</a></p>
-<p>O Arduino IDE precisa do core ESP32 e das bibliotecas MFRC522 e DFRobotDFPlayerMini. Cadastre os UIDs reais e coloque as faixas em <code>/MP3/0001.mp3</code> a <code>/MP3/0004.mp3</code>.</p>
+<p>O Arduino IDE precisa do core ESP32 e das bibliotecas MFRC522 e DFRobotDFPlayerMini. As duas tags do produto já estão cadastradas. Coloque as faixas em <code>/MP3/0001.mp3</code> a <code>/MP3/0004.mp3</code>.</p>
 <p>Simulação pública hospedada neste site. A execução no navegador cobre os estados e eventos do firmware. A validação em bancada, incluindo a demonstração de uma falha no produto físico, precisa de resultados próprios.</p>
 </section>
 <section class="print-only academic-primary">
 <h2>3 CONCLUSÃO</h2>
-<p>O modelo de operação passou nos 17 casos simulados, incluindo falhas do microSD e do leitor RFID. A próxima etapa é compilar o firmware para o ESP32 e validar a reprodução e o painel Wi-Fi com a montagem física.</p>
+<p>O modelo de operação passou nos 17 casos simulados, incluindo falhas do microSD e do leitor RFID. A equipe confirmou o funcionamento do firmware do produto na ESP32. Os resultados da simulação e o teste na placa têm registros distintos.</p>
 </section>
 <section class="print-only academic-primary">
 <h2 class="academic-centered">REFERÊNCIAS</h2>
