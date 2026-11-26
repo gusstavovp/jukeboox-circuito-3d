@@ -69,14 +69,22 @@ function render(){
  $('notice').textContent=notice||(s.tracks.length?'':'Nenhuma faixa na fila.');
 }
 async function request(path, body){
- const result=await fetch(path,body===undefined?{cache:'no-store',signal:AbortSignal.timeout(3000)}:{
-  method:'POST',body:new URLSearchParams(body),signal:AbortSignal.timeout(3000)
- });
- if(!result.ok) throw Error(result.status===409?'A reprodução mudou. Aguarde a atualização do painel.':'Comando indisponível.');
- return result.json();
+ const controller=new AbortController();
+ const timeout=setTimeout(()=>controller.abort(),3000);
+ try{
+  const options={cache:'no-store',signal:controller.signal};
+  if(body!==undefined){options.method='POST';options.body=new URLSearchParams(body);}
+  const result=await fetch(path,options);
+  if(!result.ok) throw Error(result.status===409?'A reprodução mudou. Aguarde a atualização do painel.':'Comando indisponível.');
+  return await result.json();
+ }finally{
+  clearTimeout(timeout);
+ }
 }
+let refreshing=false;
 async function refresh(){
- if(pending||draft!==null) return;
+ if(refreshing||pending||draft!==null) return;
+ refreshing=true;
  const seen=revision;
  try{
   const result=await request('/api/status');
@@ -84,7 +92,11 @@ async function refresh(){
   state=result; $('badge').textContent='ESP32 conectada'; render();
  }catch{
   if(seen!==revision)return;
-  $('badge').textContent='ESP32 desconectada'; $('volume').disabled=true; $('next').disabled=true;
+  $('badge').textContent='Sem resposta da ESP32';
+  $('notice').textContent='Confira a conexão com o Wi-Fi da Jukeboox. Tentando novamente…';
+  $('volume').disabled=true; $('next').disabled=true;
+ }finally{
+  refreshing=false;
  }
 }
 async function send(path,body){
