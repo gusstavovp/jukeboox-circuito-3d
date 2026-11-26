@@ -1,3 +1,8 @@
+REVISÃO ANTERIOR
+
+O firmware atual (Jukeboox_Final.ino e Painel.h) está em:
+https://github.com/gusstavovp/jukeboox-circuito-3d/tree/main/Jukeboox_Final
+
 Jukeboox — instalação e teste
 
 1. No Arduino IDE, instale “esp32” da Espressif Systems no Gerenciador
